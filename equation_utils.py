@@ -17,7 +17,6 @@ ELEMENTS = [
     'Rg', 'Cn', 'Uut', 'Uuq', 'Uup', 'Uuh', 'Uus', 'Uuo'
 ]
 
-
 def generate_equation_for_element(compounds, coefficients, element):
     equation = 0
     for i, compound in enumerate(compounds):
@@ -46,7 +45,7 @@ def my_solve(equations, coefficients):
     if len(solution) == len(coefficients):
         coefficient_values = []
         for c in coefficients:
-            coefficient_values.append(float(solution[c]))
+            coefficient_values.append(solution[c])   
         return coefficient_values
 
 
