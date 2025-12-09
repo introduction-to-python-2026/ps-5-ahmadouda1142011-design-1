@@ -1,6 +1,5 @@
-from string_utils import split_by_capitals, split_at_number, parse_chemical_reaction, count_atoms_in_molecule, count_atoms_in_reaction
-from equation_utils import ELEMENTS, generate_equation_for_element, build_equations, my_solve
 from sympy import Eq, symbols, solve
+from string_utils import parse_chemical_reaction, count_atoms_in_reaction
 
 ELEMENTS = [
     'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne',
@@ -25,6 +24,7 @@ def generate_equation_for_element(compounds, coefficients, element):
             equation += coefficients[i] * compound[element]
     return equation
 
+
 def build_equations(reactant_atoms, product_atoms):
     reactant_coefficients = list(symbols(f'a0:{len(reactant_atoms)}'))
     product_coefficients = list(symbols(f'b0:{len(product_atoms)}'))
@@ -40,60 +40,19 @@ def build_equations(reactant_atoms, product_atoms):
     return equations, reactant_coefficients + product_coefficients[:-1]
 
 
-
 def my_solve(equations, coefficients):
     solution = solve(equations, coefficients)
-
     if len(solution) == len(coefficients):
         coefficient_values = []
         for coefficient in coefficients:
-            coefficient_values.append(float(solution[coefficient]))
+            coefficient_values.append(solution[coefficient])
         return coefficient_values
 
 
-def split_by_capitals(formula):
-    t = []
-    splited_formula = []
-    for char in formula:
-        if char.isupper():
-            if t:
-                splited_formula.append(''.join(t))
-            t = [char]
-        else:
-            t.append(char)
-    if t:
-        splited_formula.append(''.join(t))
-    return splited_formula
-
-
-def split_at_number(formula):
-    digits = []
-    letters = []
-    for char in formula:
-        if char.isdigit():
-            digits.append(char)
-        else:
-            letters.append(char)
-    if digits == []:
-        digits.append("1")
-    return ''.join(letters), int(''.join(digits))
-
-def parse_chemical_reaction(reaction_equation):
-    reaction_equation = reaction_equation.replace(" ", "")
-    reactants, products = reaction_equation.split("->")
-    return reactants.split("+"), products.split("+")
-
-
-def count_atoms_in_molecule(molecular_formula):
-    atom_counts = {}
-    for atom in split_by_capitals(molecular_formula):
-        atom_name, atom_count = split_at_number(atom)
-        atom_counts[atom_name] = atom_counts.get(atom_name, 0) + atom_count
-    return atom_counts
-
-
-def count_atoms_in_reaction(molecules_list):
-    molecules_atoms_count = []
-    for molecule in molecules_list:
-        molecules_atoms_count.append(count_atoms_in_molecule(molecule))
-    return molecules_atoms_count
+def balance_reaction(reaction_equation):
+    reactants, products = parse_chemical_reaction(reaction_equation)
+    reactant_atoms = count_atoms_in_reaction(reactants)
+    product_atoms = count_atoms_in_reaction(products)
+    equations, coefficients = build_equations(reactant_atoms, product_atoms)
+    values = my_solve(equations, coefficients)
+    return values + [1]
