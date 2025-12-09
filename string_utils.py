@@ -46,4 +46,3 @@ def count_atoms_in_reaction(molecules_list):
         molecules_atoms_count.append(count_atoms_in_molecule(molecule))
     return molecules_atoms_count
 
-
