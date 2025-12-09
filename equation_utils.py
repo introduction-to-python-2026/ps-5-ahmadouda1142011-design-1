@@ -17,6 +17,7 @@ ELEMENTS = [
     'Rg', 'Cn', 'Uut', 'Uuq', 'Uup', 'Uuh', 'Uus', 'Uuo'
 ]
 
+
 def generate_equation_for_element(compounds, coefficients, element):
     equation = 0
     for i, compound in enumerate(compounds):
@@ -45,7 +46,7 @@ def my_solve(equations, coefficients):
     if len(solution) == len(coefficients):
         coefficient_values = []
         for c in coefficients:
-            coefficient_values.append(solution[c])   
+            coefficient_values.append(solution[c])
         return coefficient_values
 
 
@@ -60,4 +61,8 @@ def balance_reaction(reaction):
     equations, coefficients = build_equations(reactant_atoms, product_atoms)
     values = my_solve(equations, coefficients)
 
-    return values
+    if values is None:
+        return None
+
+    
+    return values + [1]
